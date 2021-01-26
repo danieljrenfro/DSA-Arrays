@@ -1,4 +1,6 @@
-const memory = require('./memory');
+const Memory = require('./memory');
+
+const memory = new Memory();
 
 class Array {
   constructor() {
@@ -11,7 +13,7 @@ class Array {
     if (this.length >= this._capacity) {
       this._resize((this.length + 1) * Array.SIZE_RATIO);
     }
-    
+
     memory.set(this.ptr + this.length, value);
     this.length++;
   }
@@ -19,9 +21,11 @@ class Array {
   _resize(size) {
     const oldPtr = this.ptr;
     this.ptr = memory.allocate(size);
+
     if (this.ptr === null) {
       throw new Error('Out of memory');
     }
+
     memory.copy(this.ptr, oldPtr, this.length);
     memory.free(oldPtr);
     this._capacity = size;
@@ -31,6 +35,7 @@ class Array {
     if (index < 0 || index >= this.length) {
       throw new Error('Index error');
     }
+
     return memory.get(this.ptr + index);
   }
 
@@ -62,8 +67,30 @@ class Array {
     if (index < 0 || index >= this.length) {
       throw new Error('Index error');
     }
+
     memory.copy(this.ptr + index, this.ptr + index + 1, this.length - index - 1);
     this.length--;
   }
 }
-Array.SIZE_RATIO = 3;
+
+function main() {
+  
+  Array.SIZE_RATIO = 3;
+
+  let arr = new Array();
+
+  arr.push(3);
+  arr.push(3);
+  arr.push(3);
+  arr.push(3);
+  arr.push(3);
+  arr.push(3);
+  arr.pop();
+  arr.pop();
+  arr.pop();
+  arr.pop();
+
+  console.log(arr.ptr);
+}
+
+main();

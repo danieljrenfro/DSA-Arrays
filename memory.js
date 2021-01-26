@@ -8,9 +8,9 @@ class Memory {
     if (this.head + size > this.memory.length) {
       return null;
     }
-
+    
     let start = this.head;
-
+    
     this.head += size;
     return start;
   }
